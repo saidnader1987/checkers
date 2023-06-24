@@ -1,0 +1,70 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+  user-select: none;
+}
+
+.board {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 75px;
+}
+
+.row {
+  display: flex;
+}
+
+.tile {
+  width: 50px;
+  height: 50px;
+  border: solid 1px black;
+}
+
+.light {
+  background-color: white;
+}
+
+.dark {
+  background-color: black;
+}
+
+.pawn {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.queen {
+  margin: 5px;
+  width: 40px;
+  height: 40px;
+  position: relative;
+  text-align: center;
+  transform: rotate(20deg);
+}
+.queen:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 40px;
+  width: 40px;
+  transform: rotate(135deg);
+}
+
+.p1 {
+  background: lightblue;
+}
+
+.p1:before {
+  background: lightblue;
+}
+
+.p2 {
+  background: lightcoral;
+}
+
+.p2:before {
+  background: lightcoral;
+}
