@@ -38,7 +38,7 @@ function initializeBoard() {
 export const initialize = (): GameState => {
   return {
     board: initializeBoard(),
-    turn: undefined
+    turn: undefined,
   };
 };
 
@@ -48,7 +48,7 @@ type Sub = {
 };
 
 const Store = (() => {
-  let subs = [] as Sub[];
+  let subs: Sub[] = [];
   let state = initialize();
   let id = 0;
 
@@ -64,7 +64,7 @@ const Store = (() => {
       return () => {
         subs = subs.filter(({ id }) => id !== cId);
       };
-    }
+    },
   };
 })();
 
@@ -82,7 +82,7 @@ export const setTile = (row: number, column: number, owner: TileOwner) =>
     board[column][row] = owner;
     return {
       ...s,
-      board
+      board,
     };
   });
 

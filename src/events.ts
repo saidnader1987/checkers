@@ -1,6 +1,6 @@
 import { TileOwner, TileInstruction } from "./types";
 import { setTile, setTurn, setWinner } from "./UI/state";
-import { BaseGame, BonusGame } from "./solucion/gameLogic";
+import { BaseGame, BonusGame } from "./logic/gameLogic";
 
 // Instantiate game
 // const game: BaseGame = new BaseGame();

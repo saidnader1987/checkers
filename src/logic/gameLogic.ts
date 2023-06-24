@@ -4,7 +4,7 @@ import {
   TileOwner,
   Instruction,
   GameStatus,
-  TileInstruction
+  TileInstruction,
 } from "../types";
 
 // Interfaces
@@ -41,9 +41,9 @@ abstract class Game {
       from: undefined,
       to: undefined,
       possiblePaths: [],
-      validDestinations: []
+      validDestinations: [],
     },
-    activePlayer: "blue"
+    activePlayer: "blue",
   };
 
   /**
@@ -60,15 +60,15 @@ abstract class Game {
         from: undefined,
         to: undefined,
         possiblePaths: [],
-        validDestinations: []
+        validDestinations: [],
       },
-      activePlayer: "blue"
+      activePlayer: "blue",
     };
     // Restarts UI
     const instructions: Instruction = {
       tileInstructions: [],
       playing: "blue",
-      winner: undefined
+      winner: undefined,
     };
     // Makes a set of instructions to update the UI
     this.getBoard()
@@ -81,19 +81,19 @@ abstract class Game {
           instruction = {
             colToSet: column,
             rowToSet: row,
-            newOwner: index === 0 ? "blue queen" : "blue pawn"
+            newOwner: index === 0 ? "blue queen" : "blue pawn",
           };
         } else if ((row + column) % 2 === 0 && index > 40) {
           instruction = {
             colToSet: column,
             rowToSet: row,
-            newOwner: index === 63 ? "red queen" : "red pawn"
+            newOwner: index === 63 ? "red queen" : "red pawn",
           };
         } else {
           instruction = {
             colToSet: column,
             rowToSet: row,
-            newOwner: "none"
+            newOwner: "none",
           };
         }
         instructions.tileInstructions.push(instruction);
@@ -302,17 +302,17 @@ abstract class Game {
         [1, 1],
         [1, -1],
         [-1, 1],
-        [-1, -1]
+        [-1, -1],
       ];
     else if (piece.getOwner() === "blue")
       return [
         [-1, 1],
-        [1, 1]
+        [1, 1],
       ];
     else
       return [
         [-1, -1],
-        [1, -1]
+        [1, -1],
       ];
   }
 
@@ -523,7 +523,7 @@ abstract class Game {
    *@returns {void}
    */
   protected setFrom(tile: Tile, player: Player): void {
-    const piece = tile.getPiece();
+    const piece = tile.getPiece()!;
     this.getCurrentMove().from = tile;
     this.setPathsDFS(tile, tile, piece);
     this.setValidDestinations(player);
@@ -668,7 +668,7 @@ abstract class Game {
       return {
         rowToSet: capture.getRow(),
         colToSet: capture.getColumn(),
-        newOwner: "none"
+        newOwner: "none",
       };
     });
   }
@@ -747,11 +747,11 @@ abstract class Game {
             {
               rowToSet: row,
               colToSet: column,
-              newOwner: `${activePlayer} ${"queen"}`
-            }
+              newOwner: `${activePlayer} ${"queen"}`,
+            },
           ],
           playing: activePlayer,
-          winner: this.getWinner()
+          winner: this.getWinner(),
         };
       } else {
         return undefined;
@@ -771,11 +771,11 @@ abstract class Game {
             {
               rowToSet: row,
               colToSet: column,
-              newOwner: "none"
-            }
+              newOwner: "none",
+            },
           ],
           playing: activePlayer,
-          winner: this.getWinner()
+          winner: this.getWinner(),
         };
       } else return undefined;
     }
@@ -783,19 +783,19 @@ abstract class Game {
     // Try to set to only if from is set
     if (this.isFromSet() && !this.isToSet()) {
       // Remember the from owner
-      const fromOwner = this.getTileOwnerString(this.getCurrentMove().from);
+      const fromOwner = this.getTileOwnerString(this.getCurrentMove().from!);
       // Player selected the same tile as destination
-      if (this.isToTheSameAsFrom(this.getCurrentMove().from, clickedTile)) {
+      if (this.isToTheSameAsFrom(this.getCurrentMove().from!, clickedTile)) {
         const instruction = {
           tileInstructions: [
             {
               rowToSet: row,
               colToSet: column,
-              newOwner: fromOwner
-            }
+              newOwner: fromOwner,
+            },
           ],
           playing: activePlayer,
-          winner: this.getWinner()
+          winner: this.getWinner(),
         };
         // Reset move
         this.resetMove();
@@ -816,8 +816,11 @@ abstract class Game {
         // Update gameState: board
         this.capture(captures);
         // Make move
-        this.setTilePiece(clickedTile, this.getCurrentMove().from.getPiece());
-        this.setTilePiece(this.getCurrentMove().from, undefined);
+        this.setTilePiece(clickedTile, this.getCurrentMove().from?.getPiece()!);
+        this.setTilePiece(
+          this.getCurrentMove().from!,
+          undefined as unknown as Piece
+        );
 
         // Check if winner
         if (this.hasPlayerWon(activePlayer)) {
@@ -834,12 +837,12 @@ abstract class Game {
             {
               rowToSet: row,
               colToSet: column,
-              newOwner: fromOwner
+              newOwner: fromOwner,
             },
-            ...captureInstructions
+            ...captureInstructions,
           ],
           playing: this.getActivePlayer(),
-          winner: this.getWinner()
+          winner: this.getWinner(),
         };
 
         // Reset Move
@@ -863,7 +866,7 @@ export class BaseGame extends Game {
    *@param {Player} player - The current player.
    *@returns {boolean} - `true` if the selected tile is a valid `from`, `false` otherwise.
    */
-  private isFromValid(tile: Tile, player: Player): boolean {
+  protected isFromValid(tile: Tile, player: Player): boolean {
     // Check if the selected tile is owned by player
     if (this.tileBelongsToPlayer(tile, player)) {
       this.resetMove();
@@ -891,7 +894,7 @@ export class BaseGame extends Game {
    *@param {Player} player - The current player.
    *@returns {void}
    */
-  private setValidDestinations(player: Player): void {
+  protected setValidDestinations(player: Player): void {
     // Filter those paths of the form [x, x] and [x, x, x]
     const validPaths = this.getCurrentMove().possiblePaths.filter(
       (path) => path.length === 3 || path.length === 2
@@ -899,9 +902,9 @@ export class BaseGame extends Game {
     // For each of the filtered paths, build the valid destination object
     validPaths.forEach((path) => {
       const validDestination: ValidDestination = {
-        destination: path.at(-1),
+        destination: path.at(-1)!,
         captures: this.getCapturesForPath(path, player),
-        path
+        path,
       };
       this.getCurrentMove().validDestinations.push(validDestination);
     });
@@ -919,7 +922,7 @@ export class BonusGame extends Game {
    *@param {Player} player - The current player
    *@returns {boolean} - `true` if the selected tile is a valid `from`, ensuring captures if any.
    */
-  private isFromValid(tile: Tile, player: Player): boolean {
+  protected isFromValid(tile: Tile, player: Player): boolean {
     if (this.tileBelongsToPlayer(tile, player)) {
       const fromsWithCaptures: Tile[] = [];
       const fromsWithDestinations: Tile[] = [];
@@ -933,7 +936,7 @@ export class BonusGame extends Game {
         const move = this.getCurrentMove();
         const piece = from.getPiece();
         move.from = from;
-        this.setPathsDFS(from, from, piece);
+        this.setPathsDFS(from, from, piece!);
         this.setValidDestinations(player);
         const { validDestinations } = move;
         // If there are captures on this path, add this from to fromsWithCaptures
@@ -967,7 +970,7 @@ export class BonusGame extends Game {
    *@param {Player} player - The current player.
    *@returns {void}
    */
-  private setValidDestinations(player: Player): void {
+  protected setValidDestinations(player: Player): void {
     // Get all paths
     const paths = this.getCurrentMove().possiblePaths;
     let validPaths;
@@ -982,9 +985,9 @@ export class BonusGame extends Game {
     // For each of the filtered path, build the validDestinations object
     validPaths.forEach((path) => {
       const validDestination: ValidDestination = {
-        destination: path.at(-1),
+        destination: path.at(-1)!,
         captures: this.getCapturesForPath(path, player),
-        path
+        path,
       };
       this.getCurrentMove().validDestinations.push(validDestination);
     });
