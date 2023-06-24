@@ -49,6 +49,10 @@ The differences between these two games are as follows:
 4. To run the project, type `npm run start`.
 5. Open your web browser and go to `localhost:3000` to start playing.
 
+## Documentation
+
+In the [wiki](https://github.com/saidnader1987/checkers/wiki) of this project, you will find additional resources to understand the development process, including a flowchart and a class diagram that guided the development of the solution.
+
 ## Acknowledgements
 
 I would like to extend my heartfelt gratitude to the team at Adidas for providing me with the opportunity to tackle this intriguing problem. The front-end board and piece representations served as a fantastic springboard for the development of the game logic.
